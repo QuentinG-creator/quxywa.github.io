@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "office-addin-manifest": "^1.12.10"
+  }
+}
