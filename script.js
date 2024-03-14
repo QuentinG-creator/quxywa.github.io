@@ -1,13 +1,13 @@
 Office.onReady(info => {
+    console.log('Office.js is now ready in ${info.host} host.');
+    let incidentTimer = {};
 
-    if(info.host === Office.HostType.Excel) {
-        let incidentTimer = {};
-
-        $("#initialisation").on("click", () => tryCatch(initialisation));
-        $("#AddIncident").on("click", () => tryCatch(addIncident));
+    $("#initialisation").on("click", () => tryCatch(initialisation));
+    $("#AddIncident").on("click", () => tryCatch(addIncident));
         
-    }
+
 })
+
 
 /** the function for the initialisation of all timers */
 function initialisation() {
