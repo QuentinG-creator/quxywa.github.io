@@ -63,6 +63,9 @@ function addIncident() {
                     firstEmptyCell.values = [[cellValue[0][0]]];
                     return context.sync();
                 }
+                else {
+                    console.log("l'incident entrée existe déjà");
+                }
                 // Si la valeur est trouvée, aucune action n'est nécessaire. Vous pouvez ajouter un else ici si nécessaire.
             });
         });
