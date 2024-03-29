@@ -12,23 +12,54 @@
 </head>
 <body>
     <script src=".\script.js"></script>
-
-    <section class="ms-font-m">
-        <p class="ms-font-m">This sample demonstrates basic Excel API calls.</p>
-    </section>
-    
     <section class="samples ms-font-m">
-        <h3>Try it out</h3>
-        <p class="ms-font-m">Select some cells in the worksheet, then press <b>Highlight selected</b>.</p>
-        <button id="run" class="ms-Button">
-        <span class="ms-Button-label">Highlight selected range</span>
-      </button>
         <button id="initialisation" class="ms-Button-label">
             <span>Initialisation des timers</span>
         </button>
         <button id="AddIncident" class="ms-Button-label">
             <span>Ajout d'un incident</span>
         </button>
+        <button id="AllRetake" class="ms-Button-label">
+            <span>Retirer les incidents</span>
+        </button>
+        <button id="Retake" class="ms-Button-label">
+            <span>Retirer un incident</span>
+        </button>
+        <button id="PEC" class="ms-Button-label">
+            <span>Prise en charge</span>
+        </button>
+        <button id="Sollicitation" class="ms-Button-label">
+            <span>Sollicitation GA</span>
+        </button>
+        <button id="RetourGA" class="ms-Button-label">
+            <span>Retour GA</span>
+        </button>
+        <button id="DemandeValCom" class="ms-Button-label">
+            <span>Demande valide comm.</span>
+        </button>
+        <button id="RetourValCom" class="ms-Button-label">
+            <span>Retour Valide comm.</span>
+        </button>
+        <button id="FinPre" class="ms-Button-label">
+            <span>Fin Prématuré de comm.</span>
+        </button>
     </section>
+    
+    <div>
+        <span>NNI :</span>
+        <input id="NNI"/>
+    </div>
+    
+    <div>
+        <span>Application :</span>
+        <input id="Application"/>
+    </div>
+    
+    <div>
+        <span>Numéro d'incident :</span>
+        <select id="IdIncident">
+            <option value="first">Veuillez initialiser vos timers</option> 
+        </select>
+    </div>
 </body>
 </html>
