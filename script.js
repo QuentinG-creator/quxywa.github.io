@@ -4,7 +4,6 @@ Office.onReady((info) => {
   $("#AddIncident").on("click", () => tryCatch(addIncident));
   $("#AllRetake").on("click", () => tryCatch(allRetake));
   $("#Retake").on("click", () => tryCatch(retake));
-  $("#PEC").on("click", () => tryCatch(priseEnCharge()));
   $("#Sollicitation").on("click", () => tryCatch(sollicitation()));
   $("#RetourGA").on("click", () => tryCatch(retourGA()));
   $("#DemandeValCom").on("click", () => tryCatch(demandeValCom()));
@@ -184,6 +183,10 @@ function addIncident() {
 
   const app = document.getElementById("Application");
   const appValue = app.value;
+
+  const type_inc = document.getElementById("type_inc");
+  const type_incValue = type_inc.value;
+
   if (nniValue && appValue) {
     return Excel.run(function(context) {
       var suivi = context.workbook.worksheets.getItem("Suivi");
@@ -207,7 +210,30 @@ function addIncident() {
           var idCellSave = save.getCell(lastRowSave, 0);
           var cellSaveTimer = save.getCell(lastRowSave, 1);
           var idCellNNI = save.getCell(lastRowSave, 2);
-          var id = "" + appValue[0] + appValue[1] + appValue[2] + lastRowSuivi;
+          if (type_incValue == "MA") {
+            var id = "MA-" + appValue[0] + appValue[1] + appValue[2] + lastRowSuivi;
+          } else if (type_incValue == "MCP") {
+            var id = "MCP-" + appValue[0] + appValue[1] + appValue[2] + lastRowSuivi;
+          } else {
+            var id = "MA-" + appValue[0] + appValue[1] + appValue[2] + lastRowSuivi;
+            domaineCell.values = [[appValue]];
+            idCellSuivi.values = [[id]];
+            idCellSave.values = [[id]];
+            idCellNNI.values = [[nniValue]];
+            cellSaveTimer.values = [[0]];
+
+            // Adding the new timer in the variable reserved to it
+            incidentTimer[id] = new Date();
+            timerForSave[id] = 0;
+
+            domaineCell = suivi.getCell(lastRowSuivi + 1, 1);
+            idCellSuivi = suivi.getCell(lastRowSuivi + 1, 0);
+            idCellSave = save.getCell(lastRowSave + 1, 0);
+            cellSaveTimer = save.getCell(lastRowSave + 1, 1);
+            idCellNNI = save.getCell(lastRowSave + 1, 2);
+
+            var id = "MCP-" + appValue[0] + appValue[1] + appValue[2] + lastRowSuivi;
+          }
 
           domaineCell.values = [[appValue]];
           idCellSuivi.values = [[id]];
@@ -238,38 +264,6 @@ function tryCatch(callback) {
     });
 }
 
-// Set the timer when the users take responsibility for the incident.
-function priseEnCharge() {
-  return Excel.run(function(context) {
-    var suivi = context.workbook.worksheets.getItem("Suivi");
-
-    const select = document.getElementById("IdIncident");
-    const id = select.value;
-
-    // Load all row from the worksheet
-    var usedRangeSuivi = suivi.getUsedRange();
-    usedRangeSuivi.load("rowCount");
-
-    return context.sync().then(function() {
-      var searchCell = usedRangeSuivi.find(id, { matchCase: true });
-      searchCell.load("rowIndex");
-      return context.sync().then(function() {
-        var priseEnChargeCell = suivi.getCell(searchCell.rowIndex, 2);
-        priseEnChargeCell.load("values");
-        return context.sync().then(function() {
-          if (priseEnChargeCell.values[0][0] === null || priseEnChargeCell.values[0][0] === "") {
-            var actualTime = new Date();
-            priseEnChargeCell.values = [[(actualTime.getTime() - incidentTimer[id]) / 1000 / 60]];
-          } else {
-            console.log("Vous avez déjà renseigner cette catégorie pour l'incident que vous avez selectionné");
-          }
-          return context.sync();
-        });
-      });
-    });
-  });
-}
-
 // Set the past time between "prise en charge" and "sollicitation" in the correct cell
 function sollicitation() {
   return Excel.run(function(context) {
@@ -293,9 +287,7 @@ function sollicitation() {
       var saveCell = usedRangeSave.find(id, { matchCase: true });
       saveCell.load("rowIndex");
       return context.sync().then(function() {
-        var priseEnChargeCell = suivi.getCell(searchCell.rowIndex, 2);
-        var sollicitationCell = suivi.getCell(searchCell.rowIndex, 3);
-        priseEnChargeCell.load("values");
+        var sollicitationCell = suivi.getCell(searchCell.rowIndex, 2);
         sollicitationCell.load("values");
 
         var saveTimer = save.getCell(saveCell.rowIndex, 1);
@@ -305,11 +297,7 @@ function sollicitation() {
           if (sollicitationCell.values[0][0] === null || sollicitationCell.values[0][0] === "") {
             var actualTime = new Date();
             sollicitationCell.values = [
-              [
-                (actualTime.getTime() - incidentTimer[id]) / 1000 / 60 +
-                  saveTimer.values[0][0] -
-                  priseEnChargeCell.values[0][0]
-              ]
+              [(actualTime.getTime() - incidentTimer[id]) / 1000 / 60 + saveTimer.values[0][0]]
             ];
           } else {
             console.log("Vous avez déjà renseigner cette catégorie pour l'incident que vous avez selectionné");
@@ -347,10 +335,8 @@ function retourGA() {
       saveCell.load("rowIndex");
 
       return context.sync().then(function() {
-        var retourGACell = suivi.getCell(searchCell.rowIndex, 4);
-        var priseEnChargeCell = suivi.getCell(searchCell.rowIndex, 2);
-        var sollicitationCell = suivi.getCell(searchCell.rowIndex, 3);
-        priseEnChargeCell.load("values");
+        var retourGACell = suivi.getCell(searchCell.rowIndex, 3);
+        var sollicitationCell = suivi.getCell(searchCell.rowIndex, 2);
         sollicitationCell.load("values");
         retourGACell.load("values");
 
@@ -364,7 +350,7 @@ function retourGA() {
               [
                 (actualTime.getTime() - incidentTimer[id]) / 1000 / 60 +
                   saveTimer.values[0][0] -
-                  (priseEnChargeCell.values[0][0] + sollicitationCell.values[0][0])
+                  sollicitationCell.values[0][0]
               ]
             ];
           } else {
@@ -403,12 +389,10 @@ function demandeValCom() {
       saveCell.load("rowIndex");
 
       return context.sync().then(function() {
-        var demandeValComCell = suivi.getCell(searchCell.rowIndex, 5);
-        var retourGACell = suivi.getCell(searchCell.rowIndex, 4);
-        var sollicitationCell = suivi.getCell(searchCell.rowIndex, 3);
-        var priseEnChargeCell = suivi.getCell(searchCell.rowIndex, 2);
+        var demandeValComCell = suivi.getCell(searchCell.rowIndex, 4);
+        var retourGACell = suivi.getCell(searchCell.rowIndex, 3);
+        var sollicitationCell = suivi.getCell(searchCell.rowIndex, 2);
         demandeValComCell.load("values");
-        priseEnChargeCell.load("values");
         sollicitationCell.load("values");
         retourGACell.load("values");
 
@@ -422,7 +406,7 @@ function demandeValCom() {
               [
                 (actualTime.getTime() - incidentTimer[id]) / 1000 / 60 +
                   saveTimer.values[0][0] -
-                  (priseEnChargeCell.values[0][0] + sollicitationCell.values[0][0] + retourGACell.values[0][0])
+                  (sollicitationCell.values[0][0] + retourGACell.values[0][0])
               ]
             ];
           } else {
@@ -461,13 +445,11 @@ function retourValCom() {
       saveCell.load("rowIndex");
 
       return context.sync().then(function() {
-        var dureeTtlCell = suivi.getCell(searchCell.rowIndex, 7);
-        var validationCell = suivi.getCell(searchCell.rowIndex, 6);
-        var demandeValComCell = suivi.getCell(searchCell.rowIndex, 5);
-        var retourGACell = suivi.getCell(searchCell.rowIndex, 4);
-        var sollicitationCell = suivi.getCell(searchCell.rowIndex, 3);
-        var priseEnChargeCell = suivi.getCell(searchCell.rowIndex, 2);
-        priseEnChargeCell.load("values");
+        var dureeTtlCell = suivi.getCell(searchCell.rowIndex, 6);
+        var validationCell = suivi.getCell(searchCell.rowIndex, 5);
+        var demandeValComCell = suivi.getCell(searchCell.rowIndex, 4);
+        var retourGACell = suivi.getCell(searchCell.rowIndex, 3);
+        var sollicitationCell = suivi.getCell(searchCell.rowIndex, 2);
         demandeValComCell.load("values");
         retourGACell.load("values");
         sollicitationCell.load("values");
@@ -484,20 +466,14 @@ function retourValCom() {
               [
                 (actualTime.getTime() - incidentTimer[id]) / 1000 / 60 +
                   saveTimer.values[0][0] -
-                  (priseEnChargeCell.values[0][0] +
-                    sollicitationCell.values[0][0] +
-                    retourGACell.values[0][0] +
-                    demandeValComCell.values[0][0])
+                  (sollicitationCell.values[0][0] + retourGACell.values[0][0] + demandeValComCell.values[0][0])
               ]
             ];
             dureeTtlCell.values = [
               [
                 (actualTime.getTime() - incidentTimer[id]) / 1000 / 60 +
                   saveTimer.values[0][0] +
-                  (priseEnChargeCell.values[0][0] +
-                    sollicitationCell.values[0][0] +
-                    retourGACell.values[0][0] +
-                    demandeValComCell.values[0][0])
+                  (sollicitationCell.values[0][0] + retourGACell.values[0][0] + demandeValComCell.values[0][0])
               ]
             ];
             save.getRange("A" + (saveCell.rowIndex + 1).toString()).delete(Excel.DeleteShiftDirection.up);
@@ -541,13 +517,11 @@ function finPre() {
       saveCell.load("rowIndex");
 
       return context.sync().then(function() {
-        var dureeTtlCell = suivi.getCell(searchCell.rowIndex, 7);
-        var validationCell = suivi.getCell(searchCell.rowIndex, 6);
-        var demandeValComCell = suivi.getCell(searchCell.rowIndex, 5);
-        var retourGACell = suivi.getCell(searchCell.rowIndex, 4);
-        var sollicitationCell = suivi.getCell(searchCell.rowIndex, 3);
-        var priseEnChargeCell = suivi.getCell(searchCell.rowIndex, 2);
-        priseEnChargeCell.load("values");
+        var dureeTtlCell = suivi.getCell(searchCell.rowIndex, 6);
+        var validationCell = suivi.getCell(searchCell.rowIndex, 5);
+        var demandeValComCell = suivi.getCell(searchCell.rowIndex, 4);
+        var retourGACell = suivi.getCell(searchCell.rowIndex, 3);
+        var sollicitationCell = suivi.getCell(searchCell.rowIndex, 2);
         demandeValComCell.load("values");
         retourGACell.load("values");
         sollicitationCell.load("values");
@@ -565,8 +539,7 @@ function finPre() {
 
             dureeTtlCell.values = [
               [
-                (priseEnChargeCell.values[0][0] +
-                  sollicitationCell.values[0][0] +
+                (sollicitationCell.values[0][0] +
                   retourGACell.values[0][0] +
                   demandeValComCell.values[0][0] +
                   actualTime.getTime() -
