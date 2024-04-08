@@ -1,58 +1,85 @@
 <!DOCTYPE html>
 <html lang="fr">
 
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link href="https://unpkg.com/office-ui-fabric-js@1.4.0/dist/css/fabric.min.css" rel="stylesheet">
-        <link href="https://unpkg.com/office-ui-fabric-js@1.4.0/dist/css/fabric.components.min.css" rel="stylesheet">
-        <link href=".\style.css" rel="stylesheet">
-        <script src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js" type="text/javascript"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/core-js/2.4.1/core.min.js"></script>
-        <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
-    </head>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://unpkg.com/office-ui-fabric-js@1.4.0/dist/css/fabric.min.css" rel="stylesheet">
+    <link href="https://unpkg.com/office-ui-fabric-js@1.4.0/dist/css/fabric.components.min.css" rel="stylesheet">
+    <link href=".\style.css" rel="stylesheet">
+    <script src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js" type="text/javascript"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/core-js/2.4.1/core.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+</head>
 
     <body>
         <script src=".\script.js"></script>
-        <section class="samples ms-font-m" style="gap: 20px;">
-            <button id="initialisation" class="ms-Button-label">
-                <span>Initialisation des timers</span>
-            </button>
-            <br/>
-            <button id="AddIncident" class="ms-Button-label">
-                <span>Ajout d'un incident</span>
-            </button>
-            <br/>
-            <button id="Sollicitation" class="ms-Button-label">
-                <span>Sollicitation GA</span>
-            </button>
-            <br/>
-            <button id="RetourGA" class="ms-Button-label">
-                <span>Retour GA</span>
-            </button>
-            <br/>
-            <button id="DemandeValCom" class="ms-Button-label">
-                <span>Demande valide comm.</span>
-            </button>
-            <br/>
-            <button id="RetourValCom" class="ms-Button-label">
-                <span>Retour Valide comm.</span>
-            </button>
-            <br/>
-            <button id="FinPre" class="ms-Button-label">
-                <span>Fin Prématuré de comm.</span>
-            </button>
-            <br/>
-            <button id="AllRetake" class="ms-Button-label">
-                <span>Retirer les incidents</span>
-            </button>
-            <br/>
-            <button id="Retake" class="ms-Button-label">
-                <span>Retirer un incident</span>
-            </button>
-    
-        </section>
-        
+        <table>
+            <tr>
+                <td>
+                    <button id="initialisation" class="ms-Button-label">
+                        <span>Initialisation des timers</span>
+                    </button>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <button id="AddIncident" class="ms-Button-label">
+                        <span>Ajout d'un incident</span>
+                    </button>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <button id="Sollicitation" class="ms-Button-label">
+                        <span>Sollicitation GA</span>
+                    </button>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <button id="RetourGA" class="ms-Button-label">
+                        <span>Retour GA</span>
+                    </button>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <button id="DemandeValCom" class="ms-Button-label">
+                        <span>Demande valide comm.</span>
+                    </button>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <button id="RetourValCom" class="ms-Button-label">
+                        <span>Retour Valide comm.</span>
+                    </button>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <button id="FinPre" class="ms-Button-label">
+                        <span>Fin Prématuré de comm.</span>
+                    </button>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <button id="AllRetake" class="ms-Button-label">
+                        <span>Retirer les incidents</span>
+                    </button>
+                <td>
+            </tr>
+            <tr>
+                <td>
+                    <button id="Retake" class="ms-Button-label">
+                        <span>Retirer un incident</span>
+                    </button>
+                </td>
+            </tr>
+        </table>
+
         <div>
             <span>NNI :</span>
             <input id="NNI" />
