@@ -1,11 +1,32 @@
 section.samples {
     margin-top: 20px;
 }
- 
+
 section.samples .ms-Button, section.setup .ms-Button {
     display: block;
     margin-bottom: 5px;
     margin-left: 20px;
     min-width: 80px;
-    
+}
+
+.table-container {
+  overflow-x: auto; /* Active la barre de défilement horizontale si nécessaire */
+  margin: 0 auto;
+  white-space: nowrap; /* Garde les lignes du tableau sur une seule ligne */
+}
+
+table {
+  width: 100%; /* Assure que la largeur de la table soit celle de son contenu et non celle du parent */
+  border-radius: 10px;
+  border-collapse: collapse;
+  table-layout: auto;
+}
+
+th, td {
+  border: 1px solid #000000;
+  padding: 0px;
+}
+
+.ms-Button-label {
+  width: 100%; /* Makes the button fill the cell */
 }
