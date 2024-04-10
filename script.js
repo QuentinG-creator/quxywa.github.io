@@ -215,24 +215,7 @@ function addIncident() {
           } else if (type_incValue == "MCP") {
             var id = "MCP-" + appValue[0] + appValue[1] + appValue[2] + lastRowSuivi;
           } else {
-            var id = "MA-" + appValue[0] + appValue[1] + appValue[2] + lastRowSuivi;
-            domaineCell.values = [[appValue]];
-            idCellSuivi.values = [[id]];
-            idCellSave.values = [[id]];
-            idCellNNI.values = [[nniValue]];
-            cellSaveTimer.values = [[0]];
-
-            // Adding the new timer in the variable reserved to it
-            incidentTimer[id] = new Date();
-            timerForSave[id] = 0;
-
-            domaineCell = suivi.getCell(lastRowSuivi + 1, 1);
-            idCellSuivi = suivi.getCell(lastRowSuivi + 1, 0);
-            idCellSave = save.getCell(lastRowSave + 1, 0);
-            cellSaveTimer = save.getCell(lastRowSave + 1, 1);
-            idCellNNI = save.getCell(lastRowSave + 1, 2);
-
-            var id = "MCP-" + appValue[0] + appValue[1] + appValue[2] + lastRowSuivi;
+            var id = "TRANSV-" + appValue[0] + appValue[1] + appValue[2] + lastRowSuivi;
           }
 
           domaineCell.values = [[appValue]];
